@@ -5,13 +5,6 @@ import (
 	"testing"
 )
 
-/*
-File name    : main_test.go.go
-Create time  : 2024/7/10 18:19
-Update time  : 2024/7/10 18:19
-Description  :
-*/
-
 func TestAES256Decode(t *testing.T) {
 	got, err := AES256Decode("U2FsdGVkX1/nhzuDGJgWQqnn42ycutivMp8Rc3O3WQw=", "2d328aba46aa98b7791265587db64b495388929834d99285e2d56a40c90ac1d6")
 	fmt.Println(got, err)
