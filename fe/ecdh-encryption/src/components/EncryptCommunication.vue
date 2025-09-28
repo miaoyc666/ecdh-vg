@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import * as CryptoJS from 'crypto-js';
-import * as elliptic from 'elliptic';
+import CryptoJS from 'crypto-js';
+import { generateKeyPair, calcSharedSecret } from '../utils/crypto.js';
 import axios from 'axios';
 
 export default {
@@ -35,10 +35,9 @@ export default {
   },
   methods: {
     generateKeyPair() {
-      const ec = new elliptic.ec('p256');
-      const keyPair = ec.genKeyPair();
-      this.privateKey = keyPair.getPrivate('hex');
-      this.publicKey = keyPair.getPublic('hex');
+      const keyPair = generateKeyPair();
+      this.privateKey = keyPair.privateKey;
+      this.publicKey = keyPair.publicKey;
     },
     async sendMessage() {
       try {
@@ -53,12 +52,8 @@ export default {
         console.log("serverPublicKey: " + serverPublicKey);
 
         // 计算共享密钥
-        const ec = new elliptic.ec('p256');
-        const clientKeyPair = ec.keyFromPrivate(this.privateKey, 'hex');
-        const serverKeyPair = ec.keyFromPublic(serverPublicKey, 'hex');
-        const sharedSecret = clientKeyPair.derive(serverKeyPair.getPublic()).toString(16);
+        const sharedSecret = calcSharedSecret(this.privateKey, serverPublicKey);
         console.log("ecdh sharedSecret: " + sharedSecret);
-
 
         // const x = aseEncrypt(this.message, PaddingLeft(sharedSecret, 16))
         // console.log("x: " + x)
